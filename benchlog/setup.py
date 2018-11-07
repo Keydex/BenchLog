@@ -17,6 +17,7 @@ setup(name='benchlog',
       long_description_content_type='text/markdown',
       install_requires=[
           'requests',
+          'psutil'
       ],
       classifiers=[
         "Programming Language :: Python :: 3",

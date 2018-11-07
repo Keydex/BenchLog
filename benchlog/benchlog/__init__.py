@@ -49,7 +49,7 @@ class BenchLog:
             self.saveData(data)
         return
     def log(self, iteration):
-        progress = float(iteration/self.size)
+        progress = float(iteration/self.size*100)
         utilCPU = psutil.cpu_percent()
         utilMem = self.process.memory_info().rss
         self.infoRunTime.append((datetime.now()-self.startTime).total_seconds())
