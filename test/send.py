@@ -10,5 +10,5 @@ for i in range(1,10000):
     temp = [None] * i
     array.append(temp)
     if(i % 1000 == 0):
-        test.log(i)
+        logging.log(i)
 logging.end()

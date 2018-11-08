@@ -3,16 +3,21 @@
 Benchlog allows a user to record the runtime and resource allocation of their program overtime.
 
 # Changelog
-## Version 0.3.dev3
+## Version 0.3
 ### Features
 - Added logging of accuracy
 - Added unique filename generation (using date and time)
 - [Documentation] Added a changelog
+- Allow local saving and sending to server with `setHost(HOST, local)`
+- Added GPU logging of usage, memory, memory utilization, gpu UUID and name with `enableGPU()`
+- Prevent users that do not have 'nvidia-smi' installed from enabling GPU
 
 ### Bug Fixes
 - Fixed bug where sendData would only save to telemetry.json on error instead of calling `saveData`
 - Prevented user from calling `end()` without calling `start()`
 - Prevented user from calling `end()` twice
+- Call for variable `deviceID` did not exist in `enableGPU()`, use `self.gpuObj` instead
+- Fixed bug where we called `saveData()` instead of `self.saveData()`
 
 ## Installation
 `pip install benchlog`
@@ -33,8 +38,9 @@ Benchlog allows a user to record the runtime and resource allocation of their pr
 2. Declare new instance of BenchLog
 E.g. `logging = BenchLog('Test Project', 1024, ['tensorflow', 'featureB'], quiet1]`
 
-3. **Optional:** Declare a host to send the telemetry data to. If no host is stored or data fails to send we will store the data in a file called `telemetry.json` in the directory of the project.
-E.g `logging.setHost('http://localhost:3000')`
+3. **Optional:** Declare a host to send the telemetry data to. If no host is stored or data fails to send we will store the data in a file called `telemetry.json` in the directory of the project. If you would like to enable local and external logging, set the second argument to 1.
+setHost(ipaddress, [OPTIONAL:1 to enable local logging, 0 default])
+E.g `logging.setHost('http://localhost:3000',1)`
 
 4. **Optional:** GPU Logging - Enable GPU Logging by calling `logging.enableGPU()` If you have more than one GPU refer to the enableGPU section
 

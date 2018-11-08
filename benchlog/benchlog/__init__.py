@@ -36,6 +36,7 @@ class BenchLog:
         self.cores = multiprocessing.cpu_count()
         self.process = psutil.Process(os.getpid())
         self.host = 'N/A'
+        self.local
         self.quiet = quiet
     def enableGPU(self, gpuID=-1):
         import GPUtil
@@ -65,10 +66,11 @@ class BenchLog:
                 print('Error enabling GPU logging. Is Nvidia GPU or nvidia-smi installed?')
                 print(e)
             return
-    def setHost(self, host):
+    def setHost(self, host, local=-1):
         if not (self.quiet == 1):
             print('Host set to ', host)
         self.host = host
+        self.local = local
         return
     def start(self):
         if not (self.quiet == 1):
@@ -80,12 +82,12 @@ class BenchLog:
             print('[ERROR]')
             print('The project has not been started, please call start()')
             return
-        elif not (self.endTime == -1):
+        if (self.endTime == -1):
             print('[ERROR]')
             print('You may not call end() twice, the project has been recorded to ', self.filename)
-        self.log(self.size)
-        self.endTime = datetime.now()
-        self.runTime = self.endTime - self.startTime
+            self.log(self.size)
+            self.endTime = datetime.now()
+            self.runTime = self.endTime - self.startTime
         if not (self.quiet == 1):
             print('[Benchmark End]')
             print('Runtime: %f seconds' % self.runTime.total_seconds())
@@ -96,6 +98,8 @@ class BenchLog:
         if not (self.host == 'N/A'):
             self.sendData(data)
         else:
+            self.saveData(data)
+        if (self.local == 1):
             self.saveData(data)
         return
     def log(self, iteration):
@@ -124,10 +128,10 @@ class BenchLog:
             if(r.status_code == 200):
                 if not (self.quiet == 1):
                     print('Response sent successfully to server!')
+            self.saveData(data)
         except requests.exceptions.RequestException as e:
             if not (self.quiet == 1):
                 print('There is an error with sending the data to the server, logging data to file instead')
-            self.saveData(data)
         return
     def saveData(self, data):
         timestr = time.strftime("%Y%m%d-%H%M%S")

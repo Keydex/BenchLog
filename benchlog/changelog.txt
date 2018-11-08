@@ -1,4 +1,13 @@
 # Changelog
+## Version 0.3
+### Features
+- Allow local saving and sending to server with `setHost(HOST, local)`
+
+## Version 0.3.dev4
+
+### Bug Fixes
+- Fixed bug where we called `saveData()` instead of `self.saveData()`
+
 ## Version 0.3.dev3
 ### Features
 - Added logging of accuracy
