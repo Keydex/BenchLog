@@ -114,7 +114,7 @@ class BenchLog:
             self.infoGpuMemUtil.append(utilGPUMem)
             self.infoGpuMemUsage.append(gpuMem)
         if not (self.quiet == 1):
-            print('Progress: %0.2f%% CPU:%0.1f MEM:%d MB' %(progress*100, utilCPU, utilMem/1000000))
+            print('Progress: %0.2f%% CPU:%0.1f MEM:%d MB' %(progress, utilCPU, utilMem/1000000))
             if(self.gpuLogging == 1):
                 print('GPU:%0.1f gpuMem:%0.1f MB gpuMemUtil:%0.1f' % (utilGPU, gpuMem, utilGPUMem))
         return
@@ -127,7 +127,7 @@ class BenchLog:
         except requests.exceptions.RequestException as e:
             if not (self.quiet == 1):
                 print('There is an error with sending the data to the server, logging data to file instead')
-            saveData(data)
+            self.saveData(data)
         return
     def saveData(self, data):
         timestr = time.strftime("%Y%m%d-%H%M%S")
