@@ -42,7 +42,7 @@ class BenchLog:
                 gpuID = 0
                 print('No gpuID selected, selecting GPU 0')
             self.gpuObj = GPUtil.getGPUs()
-            if(gpuID+1 > len(deviceID)):
+            if(gpuID+1 > len(self.gpuObj)):
                 print('[Error]')
                 print('Device ID is not available')
             else:
