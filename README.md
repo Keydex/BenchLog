@@ -18,19 +18,23 @@ This version allows you to send data to a server or store the log file locally t
 |  Opt: quiet | integer | Set to 1 to disable logging, default: 0  |
 
 ### Setup
-1. Declare new instance of BenchLog
+1. Import BenchLog
+`from benchlog import BenchLog`
+
+2. Declare new instance of BenchLog
 E.g. `logging = BenchLog('Test Project', 1024, ['tensorflow', 'featureB'], quiet1]`
 
-2. **Optional:** Declare a host to send the telemetry data to. If no host is stored or data fails to send we will store the data in a file called `telemetry.json` in the directory of the project.
+3. **Optional:** Declare a host to send the telemetry data to. If no host is stored or data fails to send we will store the data in a file called `telemetry.json` in the directory of the project.
 E.g `logging.setHost('http://localhost:3000')`
 
-3. Start logging by calling `logging.start()`
-4. Call `logging.log(iterationNum)` every once in awhile to log progress.
-5. End logging by calling `logging.end()`
+4. Start logging by calling `logging.start()`
+5. Call `logging.log(iterationNum)` every once in awhile to log progress.
+6. End logging by calling `logging.end()`
 
 ### Example Code
 
 ```
+from benchlog import BenchLog
 logging = BenchLog('My Project', 10000, ['FeatureA','FeatureB'])
 logging.setHost('http://localhost:3000')
 array = []

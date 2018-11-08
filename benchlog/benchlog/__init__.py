@@ -4,6 +4,7 @@ import requests
 import json
 import os
 import multiprocessing
+import subprocess
 
 class BenchLog:
     def __init__(self, projectName, projectSize, projectFeatures=[], quiet=0):
@@ -20,10 +21,46 @@ class BenchLog:
         self.infoProgress = []
         self.infoMemoryUsage = []
         self.infoCpuUsage = []
+        self.infoGpuUsage = []
+        self.infoGpuMemUtil = []
+        self.infoGpuMemUsage = []
+        self.gpuLogging = 0
+        self.gpuName = ''
+        self.gpuMaxMem = -1
+        self.gpuDriver = -1
+        self.gpuUUID = -1
+        self.gpuObj = None
+        self.gpuID = -1
         self.cores = multiprocessing.cpu_count()
         self.process = psutil.Process(os.getpid())
         self.host = 'N/A'
         self.quiet = quiet
+    def enableGPU(self, gpuID=-1):
+        import GPUtil
+        try:
+            if(gpuID == -1):
+                gpuID = 0
+                print('No gpuID selected, selecting GPU 0')
+            self.gpuObj = GPUtil.getGPUs()
+            if(gpuID+1 > len(deviceID)):
+                print('[Error]')
+                print('Device ID is not available')
+            else:
+                self.gpuLogging = 1
+                self.gpuID = gpuID
+                self.gpuName = self.gpuObj[gpuID].name
+                self.gpuMaxMem = self.gpuObj[gpuID].memoryTotal
+                self.gpuDriver = self.gpuObj[gpuID].driver
+                self.gpuUUID = self.gpuObj[gpuID].uuid
+                if not (self.quiet == 1):
+                    print('[GPU Logging Initialized]')
+                    print('Logging gpuID %d, GPU: %s' % (gpuID, self.gpuName))
+        except Exception as e:
+            self.gpuLogging = -1;
+            if not (self.quiet == 1):
+                print('[ERROR]')
+                print('Error enabling GPU logging. Is Nvidia GPU or nvidia-smi installed?')
+                print(e)
     def setHost(self, host):
         if not (self.quiet == 1):
             print('Host set to ', host)
@@ -43,6 +80,8 @@ class BenchLog:
             print('Runtime: %f seconds' % self.runTime.total_seconds())
             print('Attempting to send Data to Server')
         data = {'cores':self.cores, 'runTime': self.runTime.total_seconds(), 'size': self.size, 'features':self.features, 'projectName':self.projectName, 'infoRunTime':self.infoRunTime, 'infoCpuUsage':self.infoCpuUsage, 'infoMemoryUsage':self.infoMemoryUsage, 'infoProgress':self.infoProgress}
+        if(self.gpuLogging == 1):
+            data.update({'gpuName':self.gpuName,'gpuUUID':self.gpuUUID,'gpuDriver':self.gpuDriver,'infoGpuUsage':self.infoGpuUsage, 'infoGpuMemUsage':self.infoGpuMemUsage, 'infoGpuMemUtil':self.infoGpuMemUtil})
         if not (self.host == 'N/A'):
             self.sendData(data)
         else:
@@ -56,8 +95,17 @@ class BenchLog:
         self.infoProgress.append(progress)
         self.infoCpuUsage.append(utilCPU)
         self.infoMemoryUsage.append(utilMem)
+        if(self.gpuLogging == 1):
+            utilGPU = self.gpuObj[self.gpuID].load
+            utilGPUMem = self.gpuObj[self.gpuID].memoryUtil
+            gpuMem = self.gpuObj[self.gpuID].memoryUsed
+            self.infoGpuUsage.append(utilGPU)
+            self.infoGpuMemUtil.append(utilGPUMem)
+            self.infoGpuMemUsage.append(gpuMem)
         if not (self.quiet == 1):
             print('Progress: %0.2f%% CPU:%0.1f MEM:%d MB' %(progress*100, utilCPU, utilMem/1000000))
+            if(self.gpuLogging == 1):
+                print('GPU:%0.1f gpuMem:%0.1f MB gpuMemUtil:%0.1f' % (utilGPU, gpuMem, utilGPUMem))
         return
     def sendData(self ,data):
         try:
