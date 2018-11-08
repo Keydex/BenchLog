@@ -6,7 +6,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='benchlog',
-      version='0.3.0',
+      version='0.3.dev2',
       description='Log CPU, GPU and Memory usage for a project overtime and send to server',
       url='https://github.com/Keydex/BenchLog',
       author='Anthony Pham',

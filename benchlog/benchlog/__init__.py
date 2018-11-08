@@ -42,7 +42,7 @@ class BenchLog:
                 gpuID = 0
                 print('No gpuID selected, selecting GPU 0')
             self.gpuObj = GPUtil.getGPUs()
-            if(gpuID+1 > len(deviceID)):
+            if(gpuID+1 > len(self.gpuObj)):
                 print('[Error]')
                 print('Device ID is not available')
             else:
@@ -71,7 +71,7 @@ class BenchLog:
             print('[Benchmark Start]')
         self.startTime = datetime.now()
         return
-    def end(self):
+    def end(self, accuracy=-1):
         self.log(self.size)
         self.endTime = datetime.now()
         self.runTime = self.endTime - self.startTime
@@ -79,7 +79,7 @@ class BenchLog:
             print('[Benchmark End]')
             print('Runtime: %f seconds' % self.runTime.total_seconds())
             print('Attempting to send Data to Server')
-        data = {'cores':self.cores, 'runTime': self.runTime.total_seconds(), 'size': self.size, 'features':self.features, 'projectName':self.projectName, 'infoRunTime':self.infoRunTime, 'infoCpuUsage':self.infoCpuUsage, 'infoMemoryUsage':self.infoMemoryUsage, 'infoProgress':self.infoProgress}
+        data = {'cores':self.cores,'accuracy':accuracy, 'runTime': self.runTime.total_seconds(), 'size': self.size, 'features':self.features, 'projectName':self.projectName, 'infoRunTime':self.infoRunTime, 'infoCpuUsage':self.infoCpuUsage, 'infoMemoryUsage':self.infoMemoryUsage, 'infoProgress':self.infoProgress}
         if(self.gpuLogging == 1):
             data.update({'gpuName':self.gpuName,'gpuUUID':self.gpuUUID,'gpuDriver':self.gpuDriver,'infoGpuUsage':self.infoGpuUsage, 'infoGpuMemUsage':self.infoGpuMemUsage, 'infoGpuMemUtil':self.infoGpuMemUtil})
         if not (self.host == 'N/A'):
