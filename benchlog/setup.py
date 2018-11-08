@@ -6,8 +6,8 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='benchlog',
-      version='0.2.0',
-      description='Log CPU and Memory usage for a project overtime and send to server',
+      version='0.3.0',
+      description='Log CPU, GPU and Memory usage for a project overtime and send to server',
       url='https://github.com/Keydex/BenchLog',
       author='Anthony Pham',
       author_email='benchlogpy@gmail.com',
@@ -17,7 +17,8 @@ setup(name='benchlog',
       long_description_content_type='text/markdown',
       install_requires=[
           'requests',
-          'psutil'
+          'psutil',
+          'GPUtil'
       ],
       classifiers=[
         "Programming Language :: Python :: 3",

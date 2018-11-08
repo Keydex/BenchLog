@@ -26,6 +26,7 @@ E.g. `logging = BenchLog('Test Project', 1024, ['tensorflow', 'featureB'], quiet
 
 3. **Optional:** Declare a host to send the telemetry data to. If no host is stored or data fails to send we will store the data in a file called `telemetry.json` in the directory of the project.
 E.g `logging.setHost('http://localhost:3000')`
+
   **Optional:** Enable GPU Logging by calling `logging.enableGPU()` If you have more than one GPU refer to the enableGPU section
 
 4. Start logging by calling `logging.start()`
@@ -40,12 +41,12 @@ E.g `logging.setHost('http://localhost:3000')`
 logging = BenchLog('My Project', 10000, ['FeatureA','FeatureB'])
 logging.setHost('http://localhost:3000')
 array = []
-test.enableGPU(0)
-test.start()
+logging.enableGPU(0)
+logging.start()
 for i in range(1,10000):
     if(i % 1000 == 0):
         #Do Something here
-        test.log(i)
+        logging.log(i)
 logging.end()
 ```
 
