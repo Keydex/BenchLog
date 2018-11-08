@@ -47,6 +47,7 @@ class BenchLog:
             if(gpuID+1 > len(self.gpuObj)):
                 print('[Error]')
                 print('Device ID is not available')
+                return
             else:
                 self.gpuLogging = 1
                 self.gpuID = gpuID
@@ -63,6 +64,7 @@ class BenchLog:
                 print('[ERROR]')
                 print('Error enabling GPU logging. Is Nvidia GPU or nvidia-smi installed?')
                 print(e)
+            return
     def setHost(self, host):
         if not (self.quiet == 1):
             print('Host set to ', host)
