@@ -5,6 +5,7 @@ import json
 import os
 import multiprocessing
 import subprocess
+import time
 
 class BenchLog:
     def __init__(self, projectName, projectSize, projectFeatures=[], quiet=0):
@@ -29,6 +30,7 @@ class BenchLog:
         self.gpuMaxMem = -1
         self.gpuDriver = -1
         self.gpuUUID = -1
+        self.filename = ''
         self.gpuObj = None
         self.gpuID = -1
         self.cores = multiprocessing.cpu_count()
@@ -72,6 +74,13 @@ class BenchLog:
         self.startTime = datetime.now()
         return
     def end(self, accuracy=-1):
+        if(self.startTime == -1):
+            print('[ERROR]')
+            print('The project has not been started, please call start()')
+            return
+        elif not (self.endTime == -1):
+            print('[ERROR]')
+            print('You may not call end() twice, the project has been recorded to ', self.filename)
         self.log(self.size)
         self.endTime = datetime.now()
         self.runTime = self.endTime - self.startTime
@@ -116,13 +125,13 @@ class BenchLog:
         except requests.exceptions.RequestException as e:
             if not (self.quiet == 1):
                 print('There is an error with sending the data to the server, logging data to file instead')
-            with open('telemetry.json', 'w') as outfile:
-                json.dump(data, outfile)
+            saveData(data)
         return
     def saveData(self, data):
-        filename = 'telemetry.json'
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        self.filename = 'benchLog_'+timestr+'.json'
         if not (self.quiet == 1):
-            print('Saving data to file %s' % filename)
-        with open(filename, 'w') as outfile:
+            print('Saving data to file %s' % self.filename)
+        with open(self.filename, 'w') as outfile:
             json.dump(data, outfile)
         return

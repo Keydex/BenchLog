@@ -1,0 +1,19 @@
+# Changelog
+## Version 0.3.dev2
+### Features
+- Added logging of accuracy
+- Added unique filename generation (using date and time)
+- [Documentation] Added a changelog
+
+### Bug Fixes
+- Fixed bug where sendData would only save to telemetry.json on error instead of calling `saveData`
+- Prevented user from calling `end()` without calling `start()`
+- Prevented user from calling `end()` twice
+
+## Version 0.3.dev1
+### Features
+- Added GPU logging of usage, memory, memory utilization, gpu UUID and name with `enableGPU()`
+- Prevent users that do not have 'nvidia-smi' installed from enabling GPU
+
+### Bug Fixes
+- Fixed bug where sendData would only save to telemetry.json on error instead of calling `saveData`
