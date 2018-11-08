@@ -2,8 +2,17 @@
 
 Benchlog allows a user to record the runtime and resource allocation of their program overtime.
 
-### Version 0.1
-This version allows you to send data to a server or store the log file locally to the machine. It overwrites the last file saved at the moment.
+# Changelog
+## Version 0.3.dev3
+### Features
+- Added logging of accuracy
+- Added unique filename generation (using date and time)
+- [Documentation] Added a changelog
+
+### Bug Fixes
+- Fixed bug where sendData would only save to telemetry.json on error instead of calling `saveData`
+- Prevented user from calling `end()` without calling `start()`
+- Prevented user from calling `end()` twice
 
 ## Installation
 `pip install benchlog`
@@ -27,20 +36,19 @@ E.g. `logging = BenchLog('Test Project', 1024, ['tensorflow', 'featureB'], quiet
 3. **Optional:** Declare a host to send the telemetry data to. If no host is stored or data fails to send we will store the data in a file called `telemetry.json` in the directory of the project.
 E.g `logging.setHost('http://localhost:3000')`
 
-  **Optional:** Enable GPU Logging by calling `logging.enableGPU()` If you have more than one GPU refer to the enableGPU section
+4. **Optional:** GPU Logging - Enable GPU Logging by calling `logging.enableGPU()` If you have more than one GPU refer to the enableGPU section
 
 4. Start logging by calling `logging.start()`
-
 5. Call `logging.log(iterationNum)` every once in awhile to log progress.
-
 6. End logging by calling `logging.end()`
 
 ### Example Code
 
 ```
+from benchlog import BenchLog
 logging = BenchLog('My Project', 10000, ['FeatureA','FeatureB'])
 logging.setHost('http://localhost:3000')
-array = []
+array =
 logging.enableGPU(0)
 logging.start()
 for i in range(1,10000):
@@ -50,10 +58,13 @@ for i in range(1,10000):
 logging.end()
 ```
 
-### `enableGPU()`
-`enableGPU()` uses `GPUtil` in order to gather gpu information. This will **only work with Nvidia GPUs**. If you have multiple GPUs you can pass in the index of the GPU you want to use. You can find which GPU you want to log by calling `nvidia-smi` and returning the GPU you want to use.
+### enableGPU()
+`logging.enableGPU()` uses `GPUtil` in order to gather gpu information. This will only work with Nvidia GPUs.
+
+If you have **multiple GPUs** you can pass in the index of the GPU you want to use. You can find which GPU you want to log by calling nvidia-smi and returning the GPU you want to use. E.g `logging.enableGPU(1)`
 
 GPU logging records three things.
+
 `GpuMemUsage` - This is the amount of memory being used by the GPU
 `GpuMemUtil` - This is the memory activity (i/o) within GPU memory
 `GpuUsage` - This is the standard gpu load
@@ -64,9 +75,9 @@ GPU logging records three things.
 ```
 
 ## Future To Do
-- [ ] Do not overwrite old telemetry data
+- [X] Do not overwrite old telemetry data
 - [X] GPU Utilization
 - [ ] Local Visualization
 - [ ] Web UI to view results
 - [ ] Server
-- [ ] Change progress to 0-100
+- [X] Change progress to 0-100
